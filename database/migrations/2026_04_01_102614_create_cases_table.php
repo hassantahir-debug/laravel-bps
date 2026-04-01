@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('cases', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
+            $table->string('case_number')->unique();
+            $table->enum('case_type', ['New', 'FollowUp', 'Emergency', 'Consultation', 'Closed', 'Surgical', 'Chronic'])->default('new');
+            $table->enum('case_category', ['General', 'Medicine', 'Pediatrics', 'Cardiology', 'Orthopedics', 'Dermatology', 'Neurology', 'Gynecology', 'Ophthalmology', 'ENT', 'Dental', 'Psychiatry', 'Other'])->default('General');
+            $table->enum('priority', ['Low', 'Medium', 'High', 'Urgent'])->default('Medium');
+            $table->enum('status', ['Active', 'Transferred', 'Closed', 'OnHold'])->default('Active');
+            $table->text('description');
+            $table->date('opened_date')->useCurrent();
+            $table->date('closed_date')->nullable();
+            $table->foreignId('reffering_doctor_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
