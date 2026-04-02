@@ -12,6 +12,7 @@ class cases extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'cases';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'patient_id',
         'case_number',
@@ -30,17 +31,11 @@ class cases extends Model
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    /**
-     * Relationship: Ek Case ko Doctor refer karta hai [cite: 47, 315]
-     */
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reffering_doctor_id');
     }
 
-    /**
-     * Relationship: Ek Case ke andar multiple Appointments ho sakti hain [cite: 342]
-     */
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class, 'case_id');

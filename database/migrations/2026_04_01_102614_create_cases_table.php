@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('cases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('patient_id')->constrained('patients')->onDelete('cascade');
             $table->string('case_number')->unique();
             $table->enum('case_type', ['New', 'FollowUp', 'Emergency', 'Consultation', 'Closed', 'Surgical', 'Chronic'])->default('new');
             $table->enum('case_category', ['General', 'Medicine', 'Pediatrics', 'Cardiology', 'Orthopedics', 'Dermatology', 'Neurology', 'Gynecology', 'Ophthalmology', 'ENT', 'Dental', 'Psychiatry', 'Other'])->default('General');
-            $table->enum('priority', ['Low', 'Medium', 'High', 'Urgent'])->default('Medium');
+            $table->enum('priority', ['Low', 'Normal', 'High', 'Urgent'])->default('Normal');
             $table->enum('status', ['Active', 'Transferred', 'Closed', 'OnHold'])->default('Active');
             $table->text('description');
             $table->date('opened_date')->useCurrent();
