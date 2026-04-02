@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('visit_id')->unique()->constrained('visits')->onDelete('cascade');
             $table->string('bill_number')->unique();
             $table->date('bill_date');
-            $table->json('procedures_codes')->nullable();
+            $table->foreignId('procedures_codes')->unique()->constrained('procedures_codes')->onDelete('set null');;
 
             $table->decimal('charges', 10, 2);
             $table->decimal('insurance_coverage', 10, 2)->default(0);
@@ -26,8 +26,6 @@ return new class extends Migration
             $table->decimal('paid_amount', 10, 2)->default(0); // Cumulative total [cite: 78, 135]
             $table->decimal('outstanding_amount', 10, 2); // Formula: bill_amount - paid_amount [cite: 77, 129, 420]
 
-
-            // Status Transitions: Pending -> Partial -> Paid [cite: 237, 423]
             $table->enum('status', ['Draft', 'Pending', 'Partial', 'Paid', 'Cancelled', 'Written Off'])->default('Pending');
             $table->string('generated_document_path')->nullable(); // NF2 Form PDF path [cite: 80, 128]
             $table->date('due_date')->nullable();
