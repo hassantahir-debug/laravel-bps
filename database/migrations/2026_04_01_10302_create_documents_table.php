@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bill_id')->constrained('bills')->onDelete('cascade');
-            $table->enum('document_type', ['ChequeImage', 'Invoice', 'Receipt', 'SupportingDocument', 'NF2Form']);
+            $table->enum('document_type', ['Cheque Image', 'Invoice', 'Receipt', 'Supporting Document', 'NF2 Form']);
 
             $table->string('file_name');
             $table->string('file_path');

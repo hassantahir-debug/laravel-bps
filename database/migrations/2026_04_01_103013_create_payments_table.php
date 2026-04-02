@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bill_id')->unique()->constrained('bills');
-            $table->integer('payment_number')->unique();
+            $table->foreignId('bill_id')->constrained('bills')->onDelete('cascade');
+            $table->string('payment_number')->unique();
             $table->decimal('amount_paid', 10, 2);
             $table->enum('payment_mode', [
                 'Cash',
