@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Closed', 'Transferred', 'On Hold'])->default('Active');
             $table->text('description');
             $table->date('opened_date');
+            $table->boolean('is_accident')->default(false);
             $table->date('closed_date')->nullable();
             $table->foreignId('referring_doctor_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();

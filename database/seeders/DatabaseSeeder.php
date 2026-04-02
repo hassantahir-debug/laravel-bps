@@ -15,11 +15,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([
+            // No foreign key dependencies
+            UserSeeder::class,
+            InsuranceSeeder::class,
+            ProcedureCodeSeeder::class,
+            PatientSeeder::class,
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            // Depends on Patient + User
+            CasesSeeder::class,
+
+            // Depends on Cases + User
+            AppointmentSeeder::class,
+
+            // Depends on Appointments
+            VisitsSeeder::class,
+
+            // Depends on Visits + ProcedureCodes
+            BillSeeder::class,
+
+            // Depends on Bills + User
+            PaymentSeeder::class,
+
+            // Depends on Bills + User
+            DocumentSeeder::class,
         ]);
     }
 }

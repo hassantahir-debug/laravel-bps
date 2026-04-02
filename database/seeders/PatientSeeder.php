@@ -2,15 +2,13 @@
 
 namespace Database\Seeders;
 
+use Database\Factories\PatientFactory;
 use Illuminate\Database\Seeder;
 
 class PatientSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        PatientFactory::new()->count(20)->create();
     }
 }

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Table('bills')]
-#[Table(key: 'id')]
 #[Fillable([
     'visit_id',
     'bill_number',

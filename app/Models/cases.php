@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class cases extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $table = 'cases';
     protected $primaryKey = 'id';
     protected $fillable = [

@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\appointment;
+use Database\Factories\VisitsFactory;
 use Illuminate\Database\Seeder;
 
 class VisitsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $appointmentIds = appointment::pluck('id')->toArray();
+
+        foreach ($appointmentIds as $appointmentId) {
+            VisitsFactory::new()->create([
+                'appointment_id' => $appointmentId,
+            ]);
+        }
     }
 }

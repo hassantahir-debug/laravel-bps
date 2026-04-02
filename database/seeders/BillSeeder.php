@@ -2,16 +2,23 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\visits;
+use App\Models\procedureCode;
+use Database\Factories\BillFactory;
 use Illuminate\Database\Seeder;
 
 class BillSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $visitIds        = visits::pluck('id')->toArray();
+        $procedureCodeIds = procedureCode::pluck('id')->toArray();
+
+        foreach ($visitIds as $visitId) {
+            BillFactory::new()->create([
+                'visit_id'          => $visitId,
+                'procedure_code_id' => fake()->randomElement($procedureCodeIds),
+            ]);
+        }
     }
 }

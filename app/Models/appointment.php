@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class appointment extends Model
 {
     use SoftDeletes, HasFactory;
+
     public function case()
     {
         return $this->belongsTo(cases::class, 'case_id');

@@ -4,29 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Table('patients')]
-#[Table(key: 'id')]
 #[Fillable([
-    'firstName',
+    'first_name',
     'email',
-    'lastName',
-    'middleName',
+    'last_name',
+    'middle_name',
     'phone',
     'mobile',
-    'dateOfBirth',
+    'date_of_birth',
     'gender',
     'address',
     'city',
     'state',
-    'postalCode',
+    'postal_code',
     'country',
-    'emergencyContactName',
-    'emergencyContactPhone'
+    'emergency_contact_name',
+    'emergency_contact_phone'
 ])]
 class patient extends Model
 {
+    use HasFactory, SoftDeletes;
+
     public function getFullNameAttribute(): string
     {
         return collect([$this->first_name, $this->middle_name, $this->last_name])

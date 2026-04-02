@@ -2,16 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\ProcedureCodeFactory;
 use Illuminate\Database\Seeder;
 
 class ProcedureCodeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        // Seed all 30 predefined CPT codes from the factory
+        ProcedureCodeFactory::new()->count(30)->create();
     }
 }
