@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('mobile');
             $table->date('dateOfBirth');
-            $table->enum('gender',['male','female']);
+            $table->enum('gender',['male','female','other']);
             $table->string('address');
             $table->string('city');
             $table->string('state');
