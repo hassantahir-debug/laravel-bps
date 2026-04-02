@@ -12,15 +12,15 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('case_id')->constrained('cases')->onDelete('cascade');
-            $table->enum('appointment_type', ['Initial', 'Follow-up', 'Emergency', 'Routine Checkup', 'Consultation', 'Procedure', 'Telehealth'])->default('Initial Consultation');
-            $table->enum('appointment_status', ['Scheduled', 'In Progress', 'Checked In', 'Completed', 'Cancelled', 'Confirmed', 'No Show', 'Rescheduled'])->default('Scheduled');
-            $table->dateTime('appointment_date');
+            $table->enum('appointment_type', ['Initial', 'Follow-up', 'Consultation', 'Procedure', 'Emergency', 'Telehealth', 'Routine Checkup'])->default('Initial');
+            $table->enum('appointment_status', ['Scheduled', 'Confirmed', 'Checked In', 'In Progress', 'Completed', 'Cancelled', 'No Show', 'Rescheduled'])->default('Scheduled');
+            $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->text('notes')->nullable();
-            $table->string('doctor_name')->nullable();
-            $table->foreignId('doctor_id')->constrained('users')->onDelete('set null');
             $table->integer('duration_minutes')->default(30);
+            $table->foreignId('doctor_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('doctor_name')->nullable();
             $table->string('specialty_required')->nullable();
+            $table->text('notes')->nullable();
             $table->boolean('reminder_sent')->default(false);
             $table->timestamps();
             $table->softDeletes();

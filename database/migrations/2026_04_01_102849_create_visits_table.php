@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use function Symfony\Component\Clock\now;
-
 return new class extends Migration
 {
     /**
@@ -15,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('appointment_id')->constrained()->onDelete('cascade');
-            $table->date('visit_date')->useCurrent();
-            $table->time('visit_time')->useCurrent();
+            $table->foreignId('appointment_id')->constrained('appointments')->onDelete('cascade');
+            $table->date('visit_date');
+            $table->time('visit_time');
             $table->text('diagnosis');
             $table->text('treatment_notes');
-            $table->text('prescription')->nullable();
+            $table->text('prescriptions')->nullable();
             $table->boolean('follow_up_required')->default(false);
             $table->date('follow_up_date')->nullable();
-            $table->enum('visit_status', ['Pending', 'completed', 'cancelled'])->default('Pending');
+            $table->enum('status', ['Pending', 'Completed', 'Cancelled'])->default('Pending');
             $table->timestamps();
             $table->softDeletes();
         });

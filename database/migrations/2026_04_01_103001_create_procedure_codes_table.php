@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('procedure_codes', function (Blueprint $table) {
+        Schema::create('procedures_codes', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique(); // Standardized code (e.g., CPT)
             $table->text('description')->nullable();     // Detailed description

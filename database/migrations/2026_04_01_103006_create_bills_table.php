@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('visit_id')->unique()->constrained('visits')->onDelete('cascade');
             $table->string('bill_number')->unique();
             $table->date('bill_date');
-            $table->foreignId('procedures_codes')->unique()->constrained('procedures_codes')->onDelete('set null');;
+            $table->foreignId('procedure_code_id')->nullable()->constrained('procedures_codes')->onDelete('set null');
 
             $table->decimal('charges', 10, 2);
             $table->decimal('insurance_coverage', 10, 2)->default(0);
