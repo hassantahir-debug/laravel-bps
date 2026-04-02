@@ -3,34 +3,64 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Table('bills')]
+#[Table(key: 'id')]
 #[Fillable([
     'visit_id',
     'bill_number',
     'bill_date',
-    'procedures_codes',
+    'procedure_codes',
     'charges',
     'insurance_coverage',
     'bill_amount',
     'discount_amount',
     'tax_amount',
-    'paid_amount',
     'outstanding_amount',
+    'paid_amount',
     'status',
     'generated_document_path',
     'notes',
-    'due_date'
+    'due_date',
 ])]
-class bill extends Model
+class Bill extends Model
 {
-    use HasFactory, SoftDeletes;
 
-    public function visit()
+    use SoftDeletes;
+    protected function casts(): array
+    {
+        return [
+            'bill_date' => 'date',
+            'due_date' => 'date',
+            'charges' => 'decimal:2',
+            'insurance_coverage' => 'decimal:2',
+            'bill_amount' => 'decimal:2',
+            'discount_amount' => 'decimal:2',
+            'tax_amount' => 'decimal:2',
+            'outstanding_amount' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'deleted_at' => 'datetime',
+        ];
+    }
+
+
+    public function visit(): BelongsTo
     {
         return $this->belongsTo(visits::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(document::class);
+    }
 }
