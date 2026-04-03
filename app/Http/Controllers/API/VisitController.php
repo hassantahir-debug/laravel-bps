@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VisitResource;
 use App\Models\visits;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,15 @@ class VisitController extends Controller
      */
     public function index()
     {
-        return response()->json(
-            visits::paginate(15),
-            200
-        );
+        $visits = visits::select('id', 'appointment_id', 'diagnosis')
+            ->with([
+                'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
+                'appointment.case:id,patient_id,case_type,case_category,is_accident',
+                'appointment.case.patient:id,name'
+            ])
+            ->latest()
+            ->paginate(15);
+        return VisitResource::collection($visits);
     }
 
     /**
