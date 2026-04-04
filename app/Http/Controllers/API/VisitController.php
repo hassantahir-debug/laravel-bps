@@ -15,6 +15,7 @@ class VisitController extends Controller
     public function index()
     {
         $visits = visits::select('id', 'appointment_id', 'diagnosis')
+            ->where('status', 'Completed')
             ->with([
                 'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
                 'appointment.case:id,patient_id,case_type,case_category,is_accident',
