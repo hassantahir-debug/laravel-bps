@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('procedures_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique(); // Standardized code (e.g., CPT)
-            $table->text('description')->nullable();     // Detailed description
-            $table->timestamps();            // created_at and updated_at
-            $table->softDeletes();           // deleted_at for soft deletes
+            $table->string('code')->unique(); 
+            $table->text('description')->nullable();    
+            $table->timestamps();         
+            $table->softDeletes();          
         });
     }
 

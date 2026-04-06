@@ -14,14 +14,21 @@ class VisitController extends Controller
      */
     public function index()
     {
+        $search = request()->query('search');
         $visits = visits::select('id', 'appointment_id', 'diagnosis')
             ->with([
                 'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
                 'appointment.case:id,patient_id,case_type,case_category,is_accident',
                 'appointment.case.patient:id,name'
             ])
+            ->when($search, function ($query, $search) {
+                $query->whereRelation('appointment.case.patient', 'name', 'like', "%$search%")
+                    ->orWhereRelation('appointment.case', 'case_type', 'like', "%$search%")
+                    ->orWhereRelation('appointment.case', 'case_category', 'like', "%$search%")
+                    ->orWhereRelation('appointment', 'doctor_name', 'like', "%$search%");
+            })
             ->latest()
-            ->paginate(15);
+            ->paginate(5);
         return VisitResource::collection($visits);
     }
 
