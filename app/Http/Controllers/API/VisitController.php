@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VisitResource;
 use App\Models\visits;
-use Illuminate\Http\Request;
 
 class VisitController extends Controller
 {
@@ -15,6 +14,7 @@ class VisitController extends Controller
     public function index()
     {
         $search = request()->query('search');
+        
         $visits = visits::select('id', 'appointment_id', 'diagnosis')
             ->where('status', 'Completed')
             ->with([
@@ -32,15 +32,6 @@ class VisitController extends Controller
             ->paginate(5);
         return VisitResource::collection($visits);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     /**
      * Display the specified resource.
      */
@@ -49,19 +40,4 @@ class VisitController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

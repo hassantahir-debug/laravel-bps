@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('procedures_codes', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique(); 
-            $table->text('description')->nullable();    
+            $table->text('description')->nullable();   
+            $table->DECIMAL('price', 13, 2)->nullable();    
             $table->timestamps();         
             $table->softDeletes();          
         });

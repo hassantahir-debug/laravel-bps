@@ -52,6 +52,7 @@ class ProcedureCodeFactory extends Factory
         return [
             'code' => $code,
             'description' => $procedures[$code],
+            'price' => fake()->randomFloat(2, 50, 500),
         ];
     }
 }
