@@ -28,12 +28,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class patient extends Model
 {
+    protected $appends = ['full_name'];
     use HasFactory, SoftDeletes;
 
     public function getFullNameAttribute(): string
     {
-        return collect([$this->first_name, $this->middle_name, $this->last_name])
-            ->filter()
-            ->implode(' ');
+        return $this->first_name . ' ' . $this->middle_name . '' . $this->last_name;
     }
 }
