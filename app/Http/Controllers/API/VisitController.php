@@ -14,13 +14,13 @@ class VisitController extends Controller
     public function index()
     {
         $search = request()->query('search');
-        
+
         $visits = visits::select('id', 'appointment_id', 'diagnosis')
             ->where('status', 'Completed')
             ->with([
                 'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
                 'appointment.case:id,patient_id,case_type,case_category,is_accident',
-                'appointment.case.patient:id,name'
+                'appointment.case.patient:id,first_name,middle_name,last_name'
             ])
             ->when($search, function ($query, $search) {
                 $query->whereRelation('appointment.case.patient', 'name', 'like', "%$search%")
@@ -39,5 +39,4 @@ class VisitController extends Controller
     {
         //
     }
-
 }
