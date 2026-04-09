@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\Bill;
 use App\Models\procedureCode;
 use Database\Factories\VisitsFactory;
-use Database\Factories\ProcedureCodeFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,6 +23,7 @@ class BillFactory extends Factory
         $billAmount = round($charges - $insuranceCoverage - $discountAmount + $taxAmount, 2);
         $paidAmount = fake()->randomFloat(2, 0, $billAmount);
         $outstandingAmount = round($billAmount - $paidAmount, 2);
+        $allProcedures = procedureCode::all()->toArray();
 
         $status = match (true) {
             $outstandingAmount <= 0 => 'Paid',
@@ -35,9 +35,12 @@ class BillFactory extends Factory
 
         return [
             'visit_id' => VisitsFactory::new()->create()->id,
-            'bill_number' => 'BILL-' . fake()->unique()->numerify('###############'),
+            'bill_number' => 'BILL-' . fake()->unique()->numberBetween(1, 200),
             'bill_date' => $billDate->format('Y-m-d'),
-            'procedure_code_id' =>  procedureCode::inRandomOrder()->first()->id ?? procedureCode::factory(),
+            'procedure_codes' => fake()->randomElements(
+                $allProcedures,
+                fake()->numberBetween(1, min(3, count($allProcedures)))
+            ),
             'charges' => $charges,
             'insurance_coverage' => $insuranceCoverage,
             'bill_amount' => $billAmount,

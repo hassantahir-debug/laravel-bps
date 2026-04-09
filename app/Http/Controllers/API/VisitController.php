@@ -23,7 +23,9 @@ class VisitController extends Controller
                 'appointment.case.patient:id,first_name,middle_name,last_name'
             ])
             ->when($search, function ($query, $search) {
-                $query->whereRelation('appointment.case.patient', 'name', 'like', "%$search%")
+                $query->whereRelation('appointment.case.patient', 'first_name', 'like', "%$search%")
+                    ->orWhereRelation('appointment.case.patient', 'middle_name', 'like', "%$search%")
+                    ->orWhereRelation('appointment.case.patient', 'last_name', 'like', "%$search%")
                     ->orWhereRelation('appointment.case', 'case_type', 'like', "%$search%")
                     ->orWhereRelation('appointment.case', 'case_category', 'like', "%$search%")
                     ->orWhereRelation('appointment', 'doctor_name', 'like', "%$search%");

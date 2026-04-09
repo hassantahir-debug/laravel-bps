@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('visit_id')->unique()->constrained('visits')->onDelete('cascade');
             $table->string('bill_number')->unique();
             $table->date('bill_date');
-            $table->foreignId('procedure_code_id')->nullable()->constrained('procedures_codes')->onDelete('set null');
+            $table->json('procedure_codes')->nullable();
             $table->decimal('charges', 10, 2);
             $table->decimal('insurance_coverage', 10, 2)->default(0);
             $table->decimal('bill_amount', 10, 2);
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('paid_amount', 10, 2)->default(0);
             $table->decimal('outstanding_amount', 10, 2);
-            $table->enum('status', ['Draft', 'Pending', 'Partial', 'Paid', 'Cancelled', 'Written Off'])->default('Pending');
+            $table->enum('status', ['Draft', 'Pending', 'Partial', 'Paid', 'Cancelled', 'Written Off'])->default('Draft');
             $table->string('generated_document_path')->nullable();
             $table->text('notes')->nullable();
             $table->date('due_date')->nullable();

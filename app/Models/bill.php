@@ -36,6 +36,7 @@ class Bill extends Model
         return [
             'bill_date' => 'date',
             'due_date' => 'date',
+            'procedure_codes' => 'json',
             'charges' => 'decimal:2',
             'insurance_coverage' => 'decimal:2',
             'bill_amount' => 'decimal:2',
