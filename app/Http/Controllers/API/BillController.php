@@ -41,13 +41,24 @@ class BillController extends Controller
             ->paginate($perPage);
 
         return BillResource::collection($bills);
-    }   
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        Bill::insert([
+            'visit_id' => $request->visit_id,
+            'bill_number' => $request->bill_number,
+            'bill_amount' => $request->bill_amount,
+            'paid_amount' => 0.00,
+            'outstanding_amount' => $request->bill_amount,
+            'status' => 'Pending',
+            'due_date' => $request->due_date,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+      return response()->json( $request->all(), 200);
     }
 
     /**
