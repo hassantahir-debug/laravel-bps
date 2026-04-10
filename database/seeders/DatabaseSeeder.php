@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             InsuranceSeeder::class,
             ProcedureCodeSeeder::class,
             PatientSeeder::class,
+            AccidentDetailsSeeder::class,
 
             // Depends on Patient + User
             CasesSeeder::class,

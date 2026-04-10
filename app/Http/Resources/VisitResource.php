@@ -16,6 +16,7 @@ class VisitResource extends JsonResource
     {
         return [
             "id" => $this->appointment->case->patient->id,
+            "visit_id" => $this->id,
             "patient_name" => $this->appointment->case->patient->full_name,
             "case_type" => $this->appointment->case->case_type,
             "case_category" => $this->appointment->case->case_category,

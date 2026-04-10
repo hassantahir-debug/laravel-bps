@@ -10,7 +10,7 @@ class BillSeeder extends Seeder
 {
     public function run(): void
     {
-        $visitIds        = visits::pluck('id')->toArray();
+        $visitIds = visits::pluck('id')->toArray();
 
         foreach ($visitIds as $visitId) {
             BillFactory::new()->create([
