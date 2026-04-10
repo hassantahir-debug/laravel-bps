@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('visits', VisitController::class);
 Route::apiResource('procedure-codes', CodeController::class);
+
+
 Route::apiResource('bills',BillController::class);
+
+
+
 Route::get('payments/export', [PaymentController::class, 'export']);
 Route::apiResource('payments', PaymentController::class);
