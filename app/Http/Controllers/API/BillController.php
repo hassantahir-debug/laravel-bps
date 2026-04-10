@@ -18,7 +18,25 @@ class BillController extends Controller
         $search = request()->query('search');
         $perPage = request()->query('per_page', 10);
 
-        $bills = Bill::select('id', 'visit_id', 'bill_number', 'bill_amount', 'status', 'created_at', 'due_date', 'outstanding_amount', 'paid_amount')
+        $bills = Bill::select(
+            'id',
+            'visit_id',
+            'bill_number',
+            'bill_amount',
+            'status',
+            'created_at',
+            'due_date',
+            'outstanding_amount',
+            'paid_amount',
+            'charges',
+            'bill_date',
+            'discount_amount',
+            'generated_document_path',
+            'insurance_coverage',
+            'notes',
+            'procedure_codes',
+            'tax_amount',
+        )
             ->with([
                 'visit:id,appointment_id,diagnosis',
                 'visit.appointment:id,case_id,appointment_date,doctor_name',
@@ -32,6 +50,9 @@ class BillController extends Controller
                         ->orWhereRelation('visit.appointment.case.patient', 'last_name', 'like', "%$search%")
                         ->orWhereRelation('visit.appointment', 'doctor_name', 'like', "%$search%");
                 });
+            })
+            ->when(request()->query('status'), function ($query, $status) {
+                $query->where('status', $status);
             })
             ->latest('bills.created_at')
             ->paginate($perPage);
@@ -80,17 +101,26 @@ class BillController extends Controller
                 'visit_id',
                 'bill_number',
                 'bill_amount',
-                'paid_amount',
-                'outstanding_amount',
                 'status',
+                'created_at',
                 'due_date',
-                'created_at'
+                'outstanding_amount',
+                'paid_amount',
+                'charges',
+                'bill_date',
+                'discount_amount',
+                'generated_document_path',
+                'insurance_coverage',
+                'notes',
+                'procedure_codes',
+                'tax_amount',
             ])
                 ->with([
-                    'visit:id,appointment_id,doctor_name',
-                    'visit.appointment:id,case_id,appointment_date',
+                    'visit:id,appointment_id,diagnosis',
+                    'visit.appointment:id,case_id,appointment_date,doctor_name',
                     'visit.appointment.case:id,patient_id,case_type',
-                    'visit.appointment.case.patient:id,first_name,middle_name,last_name'
+                    'visit.appointment.case.patient:id,first_name,middle_name,last_name',
+                    'payments' 
                 ])
                 ->findOrFail($id)
         );
@@ -106,7 +136,6 @@ class BillController extends Controller
             'notes'       => 'sometimes|string|nullable'
         ]);
 
-        // 2. Transaction start karein
         return DB::transaction(function () use ($id, $validated) {
             $bill = Bill::lockForUpdate()->findOrFail($id);
 
