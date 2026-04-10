@@ -62,20 +62,32 @@ class BillController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
-        Bill::insert([
-            'visit_id' => $request->visit_id,
-            'bill_number' => $request->bill_number,
-            'bill_amount' => $request->bill_amount,
-            'paid_amount' => 0.00,
-            'outstanding_amount' => $request->bill_amount,
-            'status' => 'Pending',
-            'due_date' => $request->due_date,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        return response()->json($request->all(), 200);
+        try {
+            $billAmount = round($request->grossCharges - $request->insuranceCredit - $request->adjustments + $request->taxAndSurcharges, 2);
+            $inserted = Bill::create([
+                'visit_id' => $request->visit_id,
+                'bill_number' => 'BILL-' . strtoupper(uniqid()),
+                'bill_amount' => $billAmount,
+                'paid_amount' => 0.00,
+                'procedure_codes' => $request->procedureCodes ?? [],
+                'charges' => $request->grossCharges,
+                'insurance_coverage' => $request->insuranceCredit,
+                'tax_amount' => $request->taxAndSurcharges,
+                'outstanding_amount' => round($billAmount - 0.00, 2),
+                'status' => 'Pending',
+                'bill_date' => now(),
+                'due_date' => $request->dueDate,
+                'notes' => $request->notes,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            return response()->json($inserted, 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error creating bill: ' . $th->getMessage()], 500);
+        }
     }
 
     /**
