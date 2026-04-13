@@ -6,9 +6,7 @@ use App\Models\Visit;
 use Database\Factories\AppointmentFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<visits>
- */
+
 class VisitsFactory extends Factory
 {
     protected $model = Visit::class;

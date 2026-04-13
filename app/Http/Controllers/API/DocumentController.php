@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\document;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
+
 
 class DocumentController extends Controller
 {
@@ -21,13 +23,12 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Incoming Request:', $request->all());
-        if ($request->hasFile('file')) {
-            Log::info('File received successfully');
-        } else {
-            Log::error('File NOT received');
+        try {
+            $insertingDocs = document::create($request->all());
+            response()->json(['message' => 'inserted Successfully', $insertingDocs], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error creating bill: ' . $th->getMessage()], 500);
         }
-        return response()->json(['message' => 'File received successfully'], 200);
     }
 
     /**

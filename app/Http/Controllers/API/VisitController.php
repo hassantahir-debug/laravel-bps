@@ -21,7 +21,8 @@ class VisitController extends Controller
             ->with([
                 'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
                 'appointment.case:id,patient_id,case_type,case_category,is_accident',
-                'appointment.case.patient:id,first_name,middle_name,last_name'
+                'appointment.case.patient:id,first_name,middle_name,last_name',
+                'bills.documents'
             ])
             ->when($search, function ($query, $search) {
                 $query->whereRelation('appointment.case.patient', 'first_name', 'like', "%$search%")
