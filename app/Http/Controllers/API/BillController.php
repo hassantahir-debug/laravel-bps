@@ -120,7 +120,11 @@ class BillController extends Controller
                     'visit.appointment:id,case_id,appointment_date,doctor_name',
                     'visit.appointment.case:id,patient_id,case_type',
                     'visit.appointment.case.patient:id,first_name,middle_name,last_name',
-                    'payments' 
+                    'payments' => function ($query) {
+                        $query->select('id', 'bill_id', 'amount_paid', 'payment_mode', 'payment_date', 'payment_status')
+                            ->orderBy('payment_date', 'desc');
+                    },
+                    'documents:id,bill_id,file_name,file_path,document_type'
                 ])
                 ->findOrFail($id)
         );

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\visits;
+use App\Models\Visit;
 use Database\Factories\BillFactory;
 use Illuminate\Database\Seeder;
 
@@ -10,7 +10,7 @@ class BillSeeder extends Seeder
 {
     public function run(): void
     {
-        $visitIds = visits::pluck('id')->toArray();
+        $visitIds = Visit::pluck('id')->toArray();
 
         foreach ($visitIds as $visitId) {
             BillFactory::new()->create([
