@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\visits;
+use App\Models\Visit;
 use Database\Factories\AppointmentFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class VisitsFactory extends Factory
 {
-    protected $model = visits::class;
+    protected $model = Visit::class;
 
     public function definition(): array
     {
