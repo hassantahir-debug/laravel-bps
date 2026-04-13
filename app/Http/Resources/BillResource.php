@@ -34,6 +34,7 @@ class BillResource extends JsonResource
             'created_at'             => $this->created_at,
             'visit'                  => new VisitResource($this->whenLoaded('visit')),
             'payments'               => PaymentResource::collection($this->whenLoaded('payments')),
+            // 'documents'              => DocumentResource::collection($this->whenLoaded('documents')),
         ];
     }
 }

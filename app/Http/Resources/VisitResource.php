@@ -3,8 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Http\Resources\Json\JsonResource;use App\Http\Resources\BillResource;
 class VisitResource extends JsonResource
 {
     /**
@@ -26,7 +25,7 @@ class VisitResource extends JsonResource
             "doctor_name" => $this->appointment?->doctor_name,
             "diagnosis" => $this->diagnosis,
             'bills_exists' => $this->bills_exists,
-            'bill' => $this->bills->first() ?? null,
+            'bills' => BillResource::collection($this->whenLoaded('bills')),
         ];
     }
 }
