@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CodeController;
 use App\Http\Controllers\API\BillController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\DocumentController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\VisitController;
@@ -18,3 +19,7 @@ Route::apiResource('document', DocumentController::class)->middleware(LoggerMidd
 
 Route::get('payments/export', [PaymentController::class, 'export']);
 Route::apiResource('payments', PaymentController::class);
+
+
+Route::get('/dashboard/poster', [DashboardController::class, 'posterStats']);
+Route::get('/dashboard/biller', [DashboardController::class, 'billerStats']);
