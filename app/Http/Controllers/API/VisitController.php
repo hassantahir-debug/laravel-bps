@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VisitResource;
-use App\Models\visits;
+use App\Models\Visit;
 
 class VisitController extends Controller
 {
@@ -15,8 +15,9 @@ class VisitController extends Controller
     {
         $search = request()->query('search');
 
-        $visits = visits::select('id', 'appointment_id', 'diagnosis')
+        $visits = Visit::select('id', 'appointment_id', 'diagnosis')
             ->where('status', 'Completed')
+            ->withExists('bills')
             ->with([
                 'appointment:id,case_id,appointment_date,appointment_time,doctor_name',
                 'appointment.case:id,patient_id,case_type,case_category,is_accident',

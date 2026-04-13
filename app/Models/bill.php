@@ -51,7 +51,7 @@ class Bill extends Model
 
     public function visit(): BelongsTo
     {
-        return $this->belongsTo(visits::class);
+        return $this->belongsTo(Visit::class);
     }
 
     public function payments(): HasMany
