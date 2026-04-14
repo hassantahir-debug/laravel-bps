@@ -65,22 +65,37 @@ class BillController extends Controller
 
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'visit_id' => 'required|integer|exists:visits,id',
+            'grossCharges' => 'required|numeric|min:0',
+            'insuranceCredit' => 'required|numeric|min:0',
+            'adjustments' => 'required|numeric|min:0',
+            'taxAndSurcharges' => 'required|numeric|min:0',
+            'procedureCodes' => 'required|array',
+            'procedureCodes.*.id' => 'required|integer',
+            'procedureCodes.*.code' => 'required|string',
+            'procedureCodes.*.description' => 'required|string',
+            'procedureCodes.*.price' => 'required|numeric|min:0',
+            'dueDate' => 'required|date',
+            'notes' => 'nullable|string',
+        ]);
+
         try {
-            $billAmount = round($request->grossCharges - $request->insuranceCredit - $request->adjustments + $request->taxAndSurcharges, 2);
+            $billAmount = round($validated['grossCharges'] - $validated['insuranceCredit'] - $validated['adjustments'] + $validated['taxAndSurcharges'], 2);
             $inserted = Bill::create([
-                'visit_id' => $request->visit_id,
+                'visit_id' => $validated['visit_id'],
                 'bill_number' => 'BILL-' . strtoupper(uniqid()),
                 'bill_amount' => $billAmount,
                 'paid_amount' => 0.00,
-                'procedure_codes' => $request->procedureCodes ?? [],
-                'charges' => $request->grossCharges,
-                'insurance_coverage' => $request->insuranceCredit,
-                'tax_amount' => $request->taxAndSurcharges,
+                'procedure_codes' => $validated['procedureCodes'],
+                'charges' => $validated['grossCharges'],
+                'insurance_coverage' => $validated['insuranceCredit'],
+                'tax_amount' => $validated['taxAndSurcharges'],
                 'outstanding_amount' => round($billAmount - 0.00, 2),
                 'status' => 'Pending',
                 'bill_date' => now(),
-                'due_date' => $request->dueDate,
-                'notes' => $request->notes,
+                'due_date' => $validated['dueDate'],
+                'notes' => $validated['notes'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -135,31 +150,69 @@ class BillController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'new_payment' => 'required|numeric|min:0.01',
-            'notes'       => 'sometimes|string|nullable'
-        ]);
+        if ($request->has('new_payment')) {
+            $validated = $request->validate([
+                'new_payment' => 'required|numeric|min:0.01',
+                'notes' => 'sometimes|string|nullable'
+            ]);
 
-        return DB::transaction(function () use ($id, $validated) {
-            $bill = Bill::lockForUpdate()->findOrFail($id);
+            return DB::transaction(function () use ($id, $validated) {
+                $bill = Bill::lockForUpdate()->findOrFail($id);
 
-            if ($bill->status === 'Cancelled') {
-                return response()->json(['message' => 'Cannot post payment to a cancelled bill'], 422);
+                if ($bill->status === 'Cancelled') {
+                    return response()->json(['message' => 'Cannot post payment to a cancelled bill'], 422);
+                }
+
+                if ($validated['new_payment'] > $bill->outstanding_amount) {
+                    return response()->json(['message' => 'Payment exceeds outstanding balance'], 422);
+                }
+
+                $bill->paid_amount += $validated['new_payment'];
+                $bill->outstanding_amount -= $validated['new_payment'];
+
+                $bill->status = ($bill->outstanding_amount <= 0) ? 'Paid' : 'Partial';
+
+                $bill->save();
+
+                return new BillResource($bill->fresh());
+            });
+        } else {
+            $validated = $request->validate([
+                'visit_id' => 'required|integer|exists:visits,id',
+                'grossCharges' => 'required|numeric|min:0',
+                'insuranceCredit' => 'required|numeric|min:0',
+                'adjustments' => 'required|numeric|min:0',
+                'taxAndSurcharges' => 'required|numeric|min:0',
+                'procedureCodes' => 'required|array',
+                'procedureCodes.*.id' => 'required|integer',
+                'procedureCodes.*.code' => 'required|string',
+                'procedureCodes.*.description' => 'required|string',
+                'procedureCodes.*.price' => 'required|numeric|min:0',
+                'dueDate' => 'required|date',
+                'notes' => 'nullable|string',
+            ]);
+
+            try {
+                $billAmount = round($validated['grossCharges'] - $validated['insuranceCredit'] - $validated['adjustments'] + $validated['taxAndSurcharges'], 2);
+                $bill = Bill::findOrFail($id);
+                $bill->update([
+                    'visit_id' => $validated['visit_id'],
+                    'bill_amount' => $billAmount,
+                    'procedure_codes' => $validated['procedureCodes'],
+                    'charges' => $validated['grossCharges'],
+                    'insurance_coverage' => $validated['insuranceCredit'],
+                    'tax_amount' => $validated['taxAndSurcharges'],
+                    'outstanding_amount' => round($billAmount - $bill->paid_amount, 2),
+                    'due_date' => $validated['dueDate'],
+                    'notes' => $validated['notes'],
+                    'updated_at' => now(),
+                ]);
+
+                return response()->json($bill, 200);
+            } catch (\Throwable $th) {
+                return response()->json(['message' => 'Error updating bill: ' . $th->getMessage()], 500);
             }
-
-            if ($validated['new_payment'] > $bill->outstanding_amount) {
-                return response()->json(['message' => 'Payment exceeds outstanding balance'], 422);
-            }
-
-            $bill->paid_amount += $validated['new_payment'];
-            $bill->outstanding_amount -= $validated['new_payment'];
-
-            $bill->status = ($bill->outstanding_amount <= 0) ? 'Paid' : 'Partial';
-
-            $bill->save();
-
-            return new BillResource($bill->fresh());
-        });
+        }
     }
 
     /**

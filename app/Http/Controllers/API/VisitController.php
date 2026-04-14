@@ -33,7 +33,7 @@ class VisitController extends Controller
                     ->orWhereRelation('appointment', 'doctor_name', 'like', "%$search%");
             })
             ->latest()
-            ->paginate(5);
+            ->paginate(10);
         return VisitResource::collection($visits);
     }
     /**
