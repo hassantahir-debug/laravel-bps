@@ -192,4 +192,84 @@ class PaymentController extends Controller
     {
         //
     }
+
+    public function export(Request $request)
+    {
+        $search  = request()->query('search');
+        $status  = request()->query('status');
+        $payment_mode = request()->query('payment_mode');
+        $dateFrom   = request()->query('date_from');
+        $dateTo    = request()->query('date_to');
+        $headers = ['Payment #', 'Bill #', 'Patient', 'Amount', 'Mode', 'Date', 'Status', 'Bank', 'Notes'];
+
+        $payments = Payment::select(
+            'id',
+            'bill_id',
+            'payment_number',
+            'amount_paid',
+            'payment_mode',
+            'payment_date',
+            'payment_status',
+            'check_number',
+            'bank_name',
+            'transaction_reference',
+            'cheque_file_path',
+            'notes',
+            'received_by',
+            'created_at'
+        )
+            ->with([
+                'bill:id,bill_number,bill_amount,outstanding_amount,paid_amount,status,visit_id',
+                'bill.visit:id,appointment_id',
+                'bill.visit.appointment:id,case_id,doctor_name',
+                'bill.visit.appointment.case:id,patient_id',
+                'bill.visit.appointment.case.patient:id,first_name,middle_name,last_name',
+            ])
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('payment_number', 'like', "%$search%")
+                        ->orWhereRelation('bill', 'bill_number', 'like', "%$search%")
+                        ->orWhereRelation(
+                            'bill.visit.appointment.case.patient',
+                            'first_name',
+                            'like',
+                            "%$search%"
+                        )
+                        ->orWhereRelation(
+                            'bill.visit.appointment.case.patient',
+                            'last_name',
+                            'like',
+                            "%$search%"
+                        );
+                });
+            })
+            ->when($status, fn($q, $status) => $q->where('payment_status', $status))
+            ->when($payment_mode, fn($q, $payment_mode) => $q->where('payment_mode', $payment_mode))
+            ->when($dateFrom, fn($q, $dateFrom) => $q->whereDate('payment_date', '>=', $dateFrom))
+            ->when($dateTo,   fn($q, $dateTo)   => $q->whereDate('payment_date', '<=', $dateTo))
+            ->latest('payments.created_at')
+            ->get();
+
+        $rows = $payments->map(fn($p) => [
+            $p->payment_number,
+            $p->bill->bill_number ?? '—',
+            $p->bill?->visit?->appointment?->case?->patient?->full_name ?? '—',
+            $p->amount_paid,
+            $p->payment_mode,
+            $p->payment_date ? substr($p->payment_date, 0, 10) : '—',
+            $p->payment_status,
+            $p->bank_name ?? '—',
+            $p->notes ?? '—',
+        ]);
+
+        $csv = collect([$headers])
+            ->merge($rows)
+            ->map(fn($row) => implode(',', $row))
+            ->implode("\n");
+
+        return response("\xEF\xBB\xBF" . $csv, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename=payments_export.csv',
+        ]);
+    }
 }
