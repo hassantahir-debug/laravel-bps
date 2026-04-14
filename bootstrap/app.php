@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\LoggerMiddleware;
+use App\Http\Middleware\TokenExtraction;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
