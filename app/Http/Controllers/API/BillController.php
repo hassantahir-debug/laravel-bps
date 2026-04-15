@@ -150,33 +150,6 @@ class BillController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if ($request->has('new_payment')) {
-            $validated = $request->validate([
-                'new_payment' => 'required|numeric|min:0.01',
-                'notes' => 'sometimes|string|nullable'
-            ]);
-
-            return DB::transaction(function () use ($id, $validated) {
-                $bill = Bill::lockForUpdate()->findOrFail($id);
-
-                if ($bill->status === 'Cancelled') {
-                    return response()->json(['message' => 'Cannot post payment to a cancelled bill'], 422);
-                }
-
-                if ($validated['new_payment'] > $bill->outstanding_amount) {
-                    return response()->json(['message' => 'Payment exceeds outstanding balance'], 422);
-                }
-
-                $bill->paid_amount += $validated['new_payment'];
-                $bill->outstanding_amount -= $validated['new_payment'];
-
-                $bill->status = ($bill->outstanding_amount <= 0) ? 'Paid' : 'Partial';
-
-                $bill->save();
-
-                return new BillResource($bill->fresh());
-            });
-        } else {
             $validated = $request->validate([
                 'visit_id' => 'required|integer|exists:visits,id',
                 'grossCharges' => 'required|numeric|min:0',
@@ -212,7 +185,6 @@ class BillController extends Controller
             } catch (\Throwable $th) {
                 return response()->json(['message' => 'Error updating bill: ' . $th->getMessage()], 500);
             }
-        }
     }
 
     /**
