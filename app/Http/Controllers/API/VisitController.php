@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VisitResource;
 use App\Models\Visit;
+use Illuminate\Http\Request;
 
 class VisitController extends Controller
 {
@@ -40,6 +41,18 @@ class VisitController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
+    {
+        //
+    }
+        public function update(Request $request, string $id)
+    {
+       
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
         //
     }
