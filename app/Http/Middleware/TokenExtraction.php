@@ -11,7 +11,6 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 
 class TokenExtraction
 {
@@ -19,7 +18,6 @@ class TokenExtraction
     {
         $token = $request->cookie('token');
         $token = Cookie::get('token');
-        Log::info('', ['token' => $token]);
         if (!$token) {
             return response()->json(['error' => 'Token not found'], 401);
         }

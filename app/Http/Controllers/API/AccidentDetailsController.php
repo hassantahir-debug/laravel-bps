@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\accidentDetails;
 use App\Http\Requests\StoreaccidentDetailsRequest;
 use App\Http\Requests\UpdateaccidentDetailsRequest;
@@ -13,7 +14,7 @@ class AccidentDetailsController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(["message" => "addd"], 200);
     }
 
     /**
@@ -35,9 +36,10 @@ class AccidentDetailsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(accidentDetails $accidentDetails)
+    public function show($id)
     {
-        //
+        $data = accidentDetails::findOrFail($id);
+        return response()->json($data);
     }
 
     /**
