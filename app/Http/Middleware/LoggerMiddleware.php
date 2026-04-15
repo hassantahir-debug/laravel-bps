@@ -35,7 +35,6 @@ class LoggerMiddleware
             'http_version' => $_SERVER['SERVER_PROTOCOL'],
             'timestamp'    => $dt->toDateTimeString(),
             'headers'      => [
-                // get all the required headers to log
                 'user-agent' => $request->header('user-agent'),
                 'referer'    => $request->header('referer'),
                 'origin'     => $request->header('origin'),
