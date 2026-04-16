@@ -20,9 +20,11 @@ class PaymentFactory extends Factory
             'Cash', 'Check', 'Bank Transfer', 'Credit Card',
             'Debit Card', 'Insurance', 'Online Payment'
         ]);
+        $billId = \App\Models\bill::inRandomOrder()->value('id') ?? BillFactory::new()->create()->id;
+        $userId = \App\Models\User::inRandomOrder()->value('id') ?? UserFactory::new()->create()->id;
 
         return [
-            'bill_id' => BillFactory::new()->create()->id,
+            'bill_id' => $billId,
             'payment_number' => 'PAY-' . fake()->unique()->numerify('######'),
             'amount_paid' => fake()->randomFloat(2, 10, 2000),
             'payment_mode' => $paymentMode,
@@ -35,7 +37,7 @@ class PaymentFactory extends Factory
             'payment_status' => fake()->randomElement(['Completed', 'Pending', 'Failed', 'Refunded']),
             'cheque_file_path' => null,
             'notes' => fake()->optional(0.3)->sentence(),
-            'received_by' => UserFactory::new()->create()->id,
+            'received_by' => $userId,
         ];
     }
 }

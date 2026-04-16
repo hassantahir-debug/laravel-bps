@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Table('patients')]
@@ -31,12 +32,19 @@ class patient extends Model
 {
     protected $appends = ['full_name'];
     use HasFactory, SoftDeletes;
-     public function accident_details(): BelongsTo
+    public function accident_details(): BelongsTo
     {
         return $this->belongsTo(accidentDetails::class);
     }
+
+    public function cases(): HasMany
+    {
+        return $this->hasMany(cases::class);
+    }
+
     public function getFullNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->middle_name . '' . $this->last_name;
+        $middle = $this->middle_name ? $this->middle_name . ' ' : '';
+        return $this->first_name . ' ' . $middle . $this->last_name;
     }
 }

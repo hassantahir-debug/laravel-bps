@@ -16,10 +16,11 @@ class AppointmentFactory extends Factory
 
     public function definition(): array
     {
-        $doctor = UserFactory::new()->create(['role' => 'Doctor']);
+        $doctor = \App\Models\User::where('role', 'Doctor')->inRandomOrder()->first() ?? UserFactory::new()->create(['role' => 'Doctor']);
+        $caseId = \App\Models\cases::inRandomOrder()->value('id') ?? CasesFactory::new()->create()->id;
 
         return [
-            'case_id' => CasesFactory::new()->create()->id,
+            'case_id' => $caseId,
             'appointment_type' => fake()->randomElement(['Initial', 'Follow-up', 'Consultation', 'Procedure', 'Emergency', 'Telehealth', 'Routine Checkup']),
             'appointment_status' => fake()->randomElement(['Scheduled', 'Confirmed', 'Checked In', 'In Progress', 'Completed', 'Cancelled', 'No Show', 'Rescheduled']),
             'appointment_date' => fake()->dateTimeBetween('-3 months', '+3 months')->format('Y-m-d'),
