@@ -13,10 +13,11 @@ class VisitsFactory extends Factory
 
     public function definition(): array
     {
+        $appointmentId = \App\Models\appointment::inRandomOrder()->value('id') ?? AppointmentFactory::new()->create()->id;
         $followUpRequired = fake()->boolean(30);
 
         return [
-            'appointment_id' => AppointmentFactory::new()->create()->id,
+            'appointment_id' => $appointmentId,
             'visit_date' => fake()->dateTimeBetween('-3 months', 'now')->format('Y-m-d'),
             'visit_time' => fake()->time('H:i:s'),
             'diagnosis' => fake()->sentence(10),

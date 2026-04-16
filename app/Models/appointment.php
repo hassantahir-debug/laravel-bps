@@ -35,4 +35,9 @@ class appointment extends Model
     {
         return $this->belongsTo(user::class, 'doctor_id');
     }
+
+    public function visit()
+    {
+        return $this->hasOne(Visit::class, 'appointment_id');
+    }
 }

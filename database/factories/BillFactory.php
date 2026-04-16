@@ -42,9 +42,10 @@ class BillFactory extends Factory
 
         $allProcedures = procedureCode::all()->toArray();
         $billDate      = fake()->dateTimeBetween('-6 months', 'now');
+        $visitId       = \App\Models\Visit::inRandomOrder()->value('id') ?? VisitsFactory::new()->create()->id;
 
         return [
-            'visit_id'                => VisitsFactory::new()->create()->id,
+            'visit_id'                => $visitId,
             'bill_number'             => 'BILL-' . fake()->unique()->numberBetween(1, 99999),
             'bill_date'               => $billDate->format('Y-m-d'),
             'procedure_codes'         => fake()->randomElements(
