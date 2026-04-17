@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class procedureCode extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'procedures_codes'; 
+    protected $table = 'procedures_codes';
     protected $fillable = [
         'code',
         'description',
+        'price'
     ];
     protected $dates = ['deleted_at'];
 }
