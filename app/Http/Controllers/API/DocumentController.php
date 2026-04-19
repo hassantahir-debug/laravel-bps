@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Services\DocumentService;
 use Illuminate\Http\Request;
+use Log;
 use PhpParser\Node\Stmt\TryCatch;
 
 class DocumentController extends Controller
@@ -22,10 +23,15 @@ class DocumentController extends Controller
     public function index()
     {
         try {
-            $documents = $this->documentService->getAllDocuments();
+            $page = request()->query("page");
+            $search = request()->query("search");
+            Log::info('api_document', [
+                'search' => request()->all(),
+            ]);
+            $documents = $this->documentService->getAllDocuments($page, $search);
             return response()->json(['message' => 'Documents fetched successfully', 'data' => $documents], 200);
         } catch (\Throwable $th) {
-           return response()->json(['message' => 'Error fetching documents: ' . $th->getMessage()], 500);
+            return response()->json(['message' => 'Error fetching documents: ' . $th->getMessage()], 500);
         }
     }
 

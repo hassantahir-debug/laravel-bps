@@ -24,7 +24,7 @@ abstract class BaseRepository
     /**
      * Get paginated records
      */
-    public function paginate($perPage = 15)
+    public function paginate($perPage = 10)
     {
         return $this->model->paginate($perPage);
     }
