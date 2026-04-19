@@ -15,13 +15,8 @@ class Insurance extends Model
         'name',
         'email',
         'phone',
-        'address',
         'city',
-        'state',
         'status',
-        'description',
-        'opened_date',
-        'closed_date',
     ];
     protected function casts(): array
     {
@@ -35,10 +30,6 @@ class Insurance extends Model
         ];
     }
 
-    public function bills(): HasMany
-    {
-        return $this->hasMany(Bill::class);
-    }
 
     public function scopeActive($query)
     {

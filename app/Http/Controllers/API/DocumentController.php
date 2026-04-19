@@ -3,19 +3,30 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\document;
+use App\Services\DocumentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
+use PhpParser\Node\Stmt\TryCatch;
 
 class DocumentController extends Controller
 {
+    protected $documentService;
+
+    public function __construct(DocumentService $documentService)
+    {
+        $this->documentService = $documentService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(['message' => 'File received successfully'], 200);
+        try {
+            $documents = $this->documentService->getAllDocuments();
+            return response()->json(['message' => 'Documents fetched successfully', 'data' => $documents], 200);
+        } catch (\Throwable $th) {
+           return response()->json(['message' => 'Error fetching documents: ' . $th->getMessage()], 500);
+        }
     }
 
     /**
@@ -24,10 +35,10 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         try {
-            $insertingDocs = document::create($request->all());
-            response()->json(['message' => 'inserted Successfully', $insertingDocs], 200);
+            $document = $this->documentService->createDocument($request->all());
+            return response()->json(['message' => 'inserted Successfully', $document], 200);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'Error creating bill: ' . $th->getMessage()], 500);
+            return response()->json(['message' => 'Error creating document: ' . $th->getMessage()], 500);
         }
     }
 

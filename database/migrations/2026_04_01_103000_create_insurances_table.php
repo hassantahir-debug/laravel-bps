@@ -16,13 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone');
-            $table->string('address');
             $table->string('city');
-            $table->string('state');
             $table->enum('status', ['Active', 'In-Active'])->default('Active');
-            $table->text('description');
-            $table->date('opened_date')->useCurrent();
-            $table->date('closed_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
