@@ -24,8 +24,8 @@ class DocumentService
     /**
      * Get all documents
      */
-    public function getAllDocuments()
+    public function getAllDocuments($page,$search)
     {
-        return $this->documentRepository->all();
+        return $this->documentRepository->getPaginatedResults($page,$search);
     }
 }
