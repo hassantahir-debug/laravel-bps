@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\accidentDetails;
-use App\Http\Requests\StoreaccidentDetailsRequest;
-use App\Http\Requests\UpdateaccidentDetailsRequest;
+use App\Services\AccidentDetailsService;
+use Illuminate\Http\Request;
 
 class AccidentDetailsController extends Controller
 {
+    protected $accidentDetailsService;
+
+    public function __construct(AccidentDetailsService $accidentDetailsService)
+    {
+        $this->accidentDetailsService = $accidentDetailsService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,19 +24,16 @@ class AccidentDetailsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreaccidentDetailsRequest $request)
+    public function store(Request $request)
     {
-        //
+        try {
+            $accidentDetails = $this->accidentDetailsService->createAccidentDetails($request->all());
+            return response()->json($accidentDetails, 201);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 
     /**
@@ -38,31 +41,37 @@ class AccidentDetailsController extends Controller
      */
     public function show($id)
     {
-        $data = accidentDetails::findOrFail($id);
-        return response()->json($data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(accidentDetails $accidentDetails)
-    {
-        //
+        try {
+            $data = $this->accidentDetailsService->getAccidentDetails($id);
+            return response()->json($data);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateaccidentDetailsRequest $request, accidentDetails $accidentDetails)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $accidentDetails = $this->accidentDetailsService->updateAccidentDetails($id, $request->all());
+            return response()->json($accidentDetails, 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(accidentDetails $accidentDetails)
+    public function destroy($id)
     {
-        //
+        try {
+            $this->accidentDetailsService->deleteAccidentDetails($id);
+            return response()->json(['message' => 'Accident details deleted successfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 }

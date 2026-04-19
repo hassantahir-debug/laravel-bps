@@ -21,13 +21,8 @@ class InsuranceFactory extends Factory
             'name' => fake()->company() . ' Insurance',
             'email' => fake()->unique()->companyEmail(),
             'phone' => fake()->phoneNumber(),
-            'address' => fake()->streetAddress(),
             'city' => fake()->city(),
-            'state' => fake()->state(),
             'status' => $isActive ? 'Active' : 'In-Active',
-            'description' => fake()->paragraph(),
-            'opened_date' => $openedDate->format('Y-m-d'),
-            'closed_date' => !$isActive ? fake()->dateTimeBetween($openedDate, 'now')->format('Y-m-d') : null,
         ];
     }
 }

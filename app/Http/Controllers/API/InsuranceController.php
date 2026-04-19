@@ -3,18 +3,29 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Insurance;
+use App\Services\InsuranceService;
 use Illuminate\Http\Request;
 
 class InsuranceController extends Controller
 {
+    protected $insuranceService;
+
+    public function __construct(InsuranceService $insuranceService)
+    {
+        $this->insuranceService = $insuranceService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $insuranced = Insurance::all();
-        return response()->json($insuranced,200);
+        try {
+            $insurances = $this->insuranceService->getAllInsurance();
+            return response()->json($insurances, 200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
     }
 
     /**
@@ -22,15 +33,12 @@ class InsuranceController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        try {
+            $insurance = $this->insuranceService->createInsurance($request->all());
+            return response()->json($insurance, 201);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
     }
 
     /**
@@ -38,7 +46,12 @@ class InsuranceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $insurance = $this->insuranceService->updateInsurance($id, $request->all());
+            return response()->json($insurance, 200);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
     }
 
     /**
@@ -46,6 +59,11 @@ class InsuranceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->insuranceService->deleteInsurance($id);
+            return response()->json(null, 204);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage(), 500);
+        }
     }
 }
