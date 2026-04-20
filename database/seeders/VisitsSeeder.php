@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\appointment;
-use Database\Factories\VisitsFactory;
+use App\Models\Visit;
+use Database\Factories\VisitFactory;
 use Illuminate\Database\Seeder;
 
 class VisitsSeeder extends Seeder
@@ -13,9 +14,12 @@ class VisitsSeeder extends Seeder
         $appointmentIds = appointment::pluck('id')->toArray();
 
         foreach ($appointmentIds as $appointmentId) {
-            VisitsFactory::new()->create([
+            VisitFactory::new()->create([
                 'appointment_id' => $appointmentId,
             ]);
         }
+        Visit::factory(100)->create([
+            'status' => 'Completed',
+        ]);
     }
 }
