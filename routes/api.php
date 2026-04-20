@@ -40,7 +40,7 @@ Route::middleware(['role:Admin,Payment Poster'])->group(function () {
 Route::get('/dashboard/biller', [DashboardController::class, 'billerStats'])->middleware('role:Admin,Biller');
 
 // Admin only
-Route::apiResource('procedure-codes', CodeController::class)->middleware('role:Admin');
+Route::apiResource('procedure-codes', CodeController::class)->middleware('role:Admin,Biller');
 Route::apiResource('patients', PatientController::class)->middleware('role:Admin');
 Route::apiResource('insurance', InsuranceController::class)->middleware('role:Admin');
 
