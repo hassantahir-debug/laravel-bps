@@ -24,8 +24,12 @@ class DocumentService
     /**
      * Get all documents
      */
-    public function getAllDocuments($page,$search)
+    public function getAllDocuments($page, $search)
     {
-        return $this->documentRepository->getPaginatedResults($page,$search);
+        return $this->documentRepository->getPaginatedResults($page, $search);
+    }
+    public function delete($id)
+    {
+        return $this->documentRepository->delete($id);
     }
 }

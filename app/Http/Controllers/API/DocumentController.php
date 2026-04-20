@@ -25,9 +25,6 @@ class DocumentController extends Controller
         try {
             $page = request()->query("page");
             $search = request()->query("search");
-            Log::info('api_document', [
-                'search' => request()->all(),
-            ]);
             $documents = $this->documentService->getAllDocuments($page, $search);
             return response()->json(['message' => 'Documents fetched successfully', 'data' => $documents], 200);
         } catch (\Throwable $th) {
@@ -69,6 +66,10 @@ class DocumentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->documentService->delete($id);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Error deleting document: ' . $th->getMessage()], 500);
+        }
     }
 }
