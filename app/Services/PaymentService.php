@@ -62,7 +62,7 @@ class PaymentService
                 'transaction_reference' => $validatedData['transaction_reference'] ?? null,
                 'notes' => $validatedData['notes'] ?? null,
                 'cheque_file_path' => $chequeFilePath,
-                'received_by' => auth()->id() ?? 1,
+                'received_by' => request()->attributes->get('authenticated_user')->id ?? 1,
             ];
 
             $payment = $this->paymentRepository->create($paymentData);
@@ -76,7 +76,7 @@ class PaymentService
                 $bill->outstanding_amount = 0;
                 $bill->status = 'Paid';
             } else {
-                $bill->status = 'Partially Paid';
+                $bill->status = 'Partial';
             }
 
             $bill->save();
