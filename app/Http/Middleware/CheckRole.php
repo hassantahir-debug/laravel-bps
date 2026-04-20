@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckRole
 {
@@ -18,7 +19,7 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $user = $request->attributes->get('authenticated_user');
-
+        Log::info('check', [$roles]);
         if (!$user) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
