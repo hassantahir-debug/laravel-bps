@@ -33,13 +33,6 @@ class DatabaseSeeder extends Seeder
             VisitsSeeder::class,
 
             // Depends on Visits + ProcedureCodes
-            BillSeeder::class,
-
-            // Depends on Bills + User
-            PaymentSeeder::class,
-
-            // Depends on Bills + User
-            DocumentSeeder::class,
         ]);
     }
 }

@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visit_id')->unique()->constrained('visits')->onDelete('cascade');
+            $table->foreignId('visit_id')->index()->constrained('visits')->onDelete('cascade');
             $table->string('bill_number')->unique();
             $table->date('bill_date');
             $table->json('procedure_codes')->nullable();
