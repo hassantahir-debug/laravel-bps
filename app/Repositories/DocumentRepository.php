@@ -25,4 +25,8 @@ class DocumentRepository extends BaseRepository
     {
         return $this->create($data);
     }
+    public function delete($id)
+    {
+        return $this->model->destroy($id);
+    }
 }
