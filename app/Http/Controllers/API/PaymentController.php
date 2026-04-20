@@ -94,7 +94,7 @@ class PaymentController extends Controller
     {
         $search = request()->query('search');
         $status = request()->query('status');
-        $mode = request()->query('payment_mode');
+        $mode = request()->query('mode');
         $dateFrom = request()->query('date_from');
         $dateTo = request()->query('date_to');
         $headers = ['Payment #', 'Bill #', 'Patient', 'Amount', 'Mode', 'Date', 'Status', 'Bank', 'Notes'];
