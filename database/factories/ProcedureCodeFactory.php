@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\procedureCode;
+use App\Models\ProcedureCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<procedureCode>
+ * @extends Factory<ProcedureCode>
  */
 class ProcedureCodeFactory extends Factory
 {
-    protected $model = procedureCode::class;
+    protected $model = ProcedureCode::class;
 
     public function definition(): array
     {

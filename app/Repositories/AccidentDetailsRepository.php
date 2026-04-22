@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\accidentDetails;
+use App\Models\AccidentDetails;
 
 class AccidentDetailsRepository extends BaseRepository
 {
-    public function __construct(accidentDetails $model)
+    public function __construct(AccidentDetails $model)
     {
         parent::__construct($model);
     }

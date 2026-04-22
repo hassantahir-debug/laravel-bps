@@ -2,16 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Models\accidentDetails;
-use App\Models\patient;
+use App\Models\AccidentDetails;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<accidentDetails>
+ * @extends Factory<AccidentDetails>
  */
 class AccidentDetailsFactory extends Factory
 {
-    protected $model = accidentDetails::class;
+    protected $model = AccidentDetails::class;
 
     /**
      * Define the model's default state.
@@ -21,7 +21,7 @@ class AccidentDetailsFactory extends Factory
     public function definition(): array
     {
         return [
-            'patient_id' => patient::factory(),
+            'patient_id' => Patient::factory(),
             'date_of_accident' => fake()->dateTimeBetween('-1 years', 'now')->format('Y-m-d'),
             'place_of_accident' => fake()->streetAddress(),
             'time_of_accident' => fake()->dateTimeBetween('-1 years', 'now')->format('Y-m-d H:i:s'),

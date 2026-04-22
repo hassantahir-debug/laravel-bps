@@ -6,6 +6,7 @@ use App\Repositories\PaymentRepository;
 use App\Models\Bill;
 use Illuminate\Support\Facades\DB;
 
+// Payment service
 class PaymentService
 {
     protected $paymentRepository;

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Bill;
 use App\Models\Payment;
 
+// Dashboard service
 class DashboardService
 {
     /**

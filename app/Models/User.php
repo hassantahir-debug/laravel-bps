@@ -16,6 +16,7 @@ use Illuminate\Notifications\Notifiable;
 #[Table('users')]
 #[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
+// User model
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

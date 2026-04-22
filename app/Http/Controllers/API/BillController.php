@@ -7,6 +7,7 @@ use App\Http\Resources\BillResource;
 use App\Services\BillService;
 use Illuminate\Http\Request;
 
+// Bill controller
 class BillController extends Controller
 {
     protected $billService;
@@ -35,8 +36,22 @@ class BillController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'visit_id' => 'required|integer|exists:visits,id',
+            'grossCharges' => 'required|numeric|min:0',
+            'insuranceCredit' => 'required|numeric|min:0',
+            'adjustments' => 'nullable|numeric|min:0',
+            'taxAndSurcharges' => 'required|numeric|min:0',
+            'procedureCodes' => 'required|array',
+            'procedureCodes.*.id' => 'required|integer',
+            'dueDate' => 'required|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
         try {
-            $bill = $this->billService->createBill($request->all());
+            // Provide default 0 for adjustments if null
+            $validated['adjustments'] = $validated['adjustments'] ?? 0;
+            $bill = $this->billService->createBill($validated);
             return response()->json($bill, 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Error creating bill: ' . $th->getMessage()], 500);
@@ -57,8 +72,21 @@ class BillController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $request->validate([
+            'visit_id' => 'required|integer|exists:visits,id',
+            'grossCharges' => 'required|numeric|min:0',
+            'insuranceCredit' => 'required|numeric|min:0',
+            'adjustments' => 'nullable|numeric|min:0',
+            'taxAndSurcharges' => 'required|numeric|min:0',
+            'procedureCodes' => 'required|array',
+            'procedureCodes.*.id' => 'required|integer',
+            'dueDate' => 'required|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
         try {
-            $bill = $this->billService->updateBill($id, $request->all());
+            $validated['adjustments'] = $validated['adjustments'] ?? 0;
+            $bill = $this->billService->updateBill($id, $validated);
             return response()->json($bill, 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Error updating bill: ' . $th->getMessage()], 500);

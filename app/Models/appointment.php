@@ -22,20 +22,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'reminder_sent'
 ])]
 #[Table('appointments')]
-class appointment extends Model
+// Appointment model
+class Appointment extends Model
 {
     use SoftDeletes, HasFactory;
 
+    // Case relation
     public function case()
     {
-        return $this->belongsTo(cases::class, 'case_id');
+        return $this->belongsTo(Cases::class, 'case_id');
     }
 
+    // Doctor relation
     public function doctor()
     {
-        return $this->belongsTo(user::class, 'doctor_id');
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
+    // Visit relation
     public function visit()
     {
         return $this->hasOne(Visit::class, 'appointment_id');

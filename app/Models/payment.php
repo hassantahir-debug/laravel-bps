@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'notes',
     'received_by',
 ])]
+// Payment model
 class Payment extends Model
 {
     use HasFactory, SoftDeletes;
@@ -38,11 +39,13 @@ class Payment extends Model
         'deleted_at' => 'datetime',
     ];
 
+    // Bill relation
     public function bill(): BelongsTo
     {
         return $this->belongsTo(Bill::class);
     }
 
+    // Receiver relation
     public function receiver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'received_by');

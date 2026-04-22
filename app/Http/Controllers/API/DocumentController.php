@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Log;
 use PhpParser\Node\Stmt\TryCatch;
 
+// Document controller
 class DocumentController extends Controller
 {
     protected $documentService;

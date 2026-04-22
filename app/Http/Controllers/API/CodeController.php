@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ProcedureCodeService;
 use Illuminate\Http\Request;
 
+// Procedure controller
 class CodeController extends Controller
 {
     protected $procedureCodeService;
@@ -28,8 +29,16 @@ class CodeController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'code' => 'required|string|max:10',
+            'description' => 'required|string',
+            'subDescription' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:ACTIVE,PENDING,INACTIVE',
+        ]);
+
         try {
-            $code = $this->procedureCodeService->createCode($request->all());
+            $code = $this->procedureCodeService->createCode($validated);
             return response()->json(["message" => "created successfully", "procedureCode" => $code], 200);
         } catch (\Throwable $th) {
             return response()->json(["message" => $th->getMessage()], 500);
@@ -41,8 +50,16 @@ class CodeController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $request->validate([
+            'code' => 'sometimes|required|string|max:10',
+            'description' => 'sometimes|required|string',
+            'subDescription' => 'nullable|string',
+            'price' => 'sometimes|required|numeric|min:0',
+            'status' => 'sometimes|required|in:ACTIVE,PENDING,INACTIVE',
+        ]);
+
         try {
-            $code = $this->procedureCodeService->updateCode($id, $request->all());
+            $code = $this->procedureCodeService->updateCode($id, $validated);
             return response()->json($code, 200);
         } catch (\Throwable $th) {
             return response()->json($th->getMessage(), 500);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\BillRepository;
 
+// Bill service
 class BillService
 {
     protected $billRepository;

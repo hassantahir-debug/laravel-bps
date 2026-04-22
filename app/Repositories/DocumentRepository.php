@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Models\document;
+use App\Models\Document;
 use Illuminate\Support\Facades\Log;
 
 class DocumentRepository extends BaseRepository
 {
-    public function __construct(document $model)
+    public function __construct(Document $model)
     {
         parent::__construct($model);
     }

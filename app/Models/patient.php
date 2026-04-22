@@ -28,20 +28,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'emergency_contact_name',
     'emergency_contact_phone'
 ])]
-class patient extends Model
+// Patient model
+class Patient extends Model
 {
     protected $appends = ['full_name'];
     use HasFactory, SoftDeletes;
+    // Accident relation
     public function accident_details(): BelongsTo
     {
-        return $this->belongsTo(accidentDetails::class);
+        return $this->belongsTo(AccidentDetails::class);
     }
 
+    // Cases relation
     public function cases(): HasMany
     {
-        return $this->hasMany(cases::class);
+        return $this->hasMany(Cases::class);
     }
 
+    // Full name
     public function getFullNameAttribute(): string
     {
         $middle = $this->middle_name ? $this->middle_name . ' ' : '';

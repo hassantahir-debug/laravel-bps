@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ProcedureCodeRepository;
 
+// Procedure service
 class ProcedureCodeService
 {
     protected $procedureCodeRepository;

@@ -27,10 +27,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'notes',
     'due_date',
 ])]
+// Bill model
 class Bill extends Model
 {
 
     use SoftDeletes;
+    // Type casting
     protected function casts(): array
     {
         return [
@@ -49,18 +51,21 @@ class Bill extends Model
     }
 
 
+    // Visit relation
     public function visit(): BelongsTo
     {
         return $this->belongsTo(Visit::class);
     }
 
+    // Payments relation
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
+    // Documents relation
     public function documents(): HasMany
     {
-        return $this->hasMany(document::class);
+        return $this->hasMany(Document::class);
     }
 }

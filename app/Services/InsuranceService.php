@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\InsuranceRepository;
 
+// Insurance service
 class InsuranceService
 {
     protected $insuranceRepository;

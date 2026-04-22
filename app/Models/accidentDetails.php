@@ -22,10 +22,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'insurance_policy_no',
 ])]
 #[Table('accident_details')]
-class accidentDetails extends Model
+// Accident model
+class AccidentDetails extends Model
 {
     /** @use HasFactory<\Database\Factories\AccidentDetailsFactory> */
     use HasFactory;
+    // Type casting
     protected function casts(): array
     {
         return [
@@ -45,8 +47,9 @@ class accidentDetails extends Model
             'deleted_at' => 'datetime',
         ];
     }
+    // Patient relation
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(patient::class);
+        return $this->belongsTo(Patient::class);
     }
 }

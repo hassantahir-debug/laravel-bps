@@ -2,22 +2,22 @@
 
 namespace Database\Factories;
 
-use App\Models\appointment;
+use App\Models\Appointment;
 use Database\Factories\CasesFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<appointment>
+ * @extends Factory<Appointment>
  */
 class AppointmentFactory extends Factory
 {
-    protected $model = appointment::class;
+    protected $model = Appointment::class;
 
     public function definition(): array
     {
         $doctor = \App\Models\User::where('role', 'Doctor')->inRandomOrder()->first() ?? UserFactory::new()->create(['role' => 'Doctor']);
-        $caseId = \App\Models\cases::inRandomOrder()->value('id') ?? CasesFactory::new()->create()->id;
+        $caseId = \App\Models\Cases::inRandomOrder()->value('id') ?? CasesFactory::new()->create()->id;
 
         return [
             'case_id' => $caseId,

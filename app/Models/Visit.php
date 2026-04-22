@@ -20,13 +20,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'visit_status'
 ])]
 #[Table('visits')]
+// Visit model
 class Visit extends Model
 {
     use HasFactory, SoftDeletes;
+    // Appointment relation
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
     }
+    // Bills relation
     public function bills()
     {
         return $this->hasMany(Bill::class,'visit_id');

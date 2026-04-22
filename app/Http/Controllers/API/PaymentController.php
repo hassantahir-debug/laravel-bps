@@ -7,6 +7,7 @@ use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 
+// Payment controller
 class PaymentController extends Controller
 {
     protected $paymentService;

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\patient;
+use App\Models\Patient;
 use Database\Factories\AccidentDetailsFactory;
 use Illuminate\Database\Seeder;
 
@@ -10,7 +10,7 @@ class AccidentDetailsSeeder extends Seeder
 {
     public function run(): void
     {
-        $patients = patient::all();
+        $patients = Patient::all();
 
         if ($patients->isEmpty()) {
             AccidentDetailsFactory::new()->count(10)->create();

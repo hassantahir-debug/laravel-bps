@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Services\PatientService;
 use Illuminate\Http\Request;
 
+// Patient controller
 class PatientController extends Controller
 {
     protected $patientService;
