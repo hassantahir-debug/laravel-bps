@@ -2,21 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Models\cases;
+use App\Models\Cases;
 use Database\Factories\PatientFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<cases>
+ * @extends Factory<Cases>
  */
 class CasesFactory extends Factory
 {
-    protected $model = cases::class;
+    protected $model = Cases::class;
 
     public function definition(): array
     {
-        $patientId = \App\Models\patient::inRandomOrder()->value('id') ?? PatientFactory::new()->create()->id;
+        $patientId = \App\Models\Patient::inRandomOrder()->value('id') ?? PatientFactory::new()->create()->id;
         $doctorId = \App\Models\User::inRandomOrder()->value('id') ?? UserFactory::new()->create()->id;
         $openedDate = fake()->dateTimeBetween('-1 year', 'now');
         $isClosed = fake()->boolean(30);

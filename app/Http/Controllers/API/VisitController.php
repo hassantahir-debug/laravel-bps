@@ -7,6 +7,7 @@ use App\Http\Resources\VisitResource;
 use App\Services\VisitService;
 use Illuminate\Http\Request;
 
+// Visit controller
 class VisitController extends Controller
 {
     protected $visitService;

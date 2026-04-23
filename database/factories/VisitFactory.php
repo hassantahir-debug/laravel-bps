@@ -13,7 +13,7 @@ class VisitFactory extends Factory
 
     public function definition(): array
     {
-        $appointmentId = \App\Models\appointment::inRandomOrder()->value('id') ?? AppointmentFactory::new()->create()->id;
+        $appointmentId = \App\Models\Appointment::inRandomOrder()->value('id') ?? AppointmentFactory::new()->create()->id;
         $followUpRequired = fake()->boolean(30);
 
         return [

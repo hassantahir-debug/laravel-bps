@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\patient;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<patient>
+ * @extends Factory<Patient>
  */
 class PatientFactory extends Factory
 {
-    protected $model = patient::class;
+    protected $model = Patient::class;
 
     public function definition(): array
     {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+// Insurance model
 class Insurance extends Model
 {
     use HasFactory, SoftDeletes;
@@ -18,6 +19,7 @@ class Insurance extends Model
         'city',
         'status',
     ];
+    // Type casting
     protected function casts(): array
     {
         return [
@@ -31,6 +33,7 @@ class Insurance extends Model
     }
 
 
+    // Active scope
     public function scopeActive($query)
     {
         return $query->where('status', 'Active');

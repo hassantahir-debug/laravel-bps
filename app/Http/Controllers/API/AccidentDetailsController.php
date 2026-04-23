@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\AccidentDetailsService;
 use Illuminate\Http\Request;
 
+// Accident controller
 class AccidentDetailsController extends Controller
 {
     protected $accidentDetailsService;

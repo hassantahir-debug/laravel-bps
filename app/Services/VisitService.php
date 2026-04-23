@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\VisitRepository;
 
+// Visit service
 class VisitService
 {
     protected $visitRepository;

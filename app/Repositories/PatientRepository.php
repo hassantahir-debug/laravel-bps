@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\patient;
+use App\Models\Patient;
 
 class PatientRepository extends BaseRepository
 {
-    public function __construct(patient $model)
+    public function __construct(Patient $model)
     {
         parent::__construct($model);
     }

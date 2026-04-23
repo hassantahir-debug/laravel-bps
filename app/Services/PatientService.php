@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\PatientRepository;
 
+// Patient service
 class PatientService
 {
     protected $patientRepository;

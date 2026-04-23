@@ -18,22 +18,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'uploaded_by',
     'version'
 ])]
-class document extends Model
+// Document model
+class Document extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'documents';
 
+    // Bill relation
     public function bill()
     {
-        return $this->belongsTo(bill::class);
+        return $this->belongsTo(Bill::class);
     }
 
+    // Uploader relation
     public function user()
     {
-        return $this->belongsTo(user::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 
+    // Size formatter
     public function getReadableFileSizeAttribute()
     {
         $size = $this->file_size;

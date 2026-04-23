@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class cases extends Model
+// Cases model
+class Cases extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -27,16 +28,19 @@ class cases extends Model
         'reffering_doctor_id'
     ];
 
+    // Patient relation
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(patient::class, 'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 
+    // Doctor relation
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reffering_doctor_id');
     }
 
+    // Appointments relation
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class, 'case_id');

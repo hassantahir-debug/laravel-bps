@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\DocumentRepository;
 
+// Document service
 class DocumentService
 {
     protected $documentRepository;
