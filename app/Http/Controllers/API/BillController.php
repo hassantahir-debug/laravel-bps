@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BillResource;
 use App\Services\BillService;
+use App\Models\Bill;
 use Illuminate\Http\Request;
 
 // Bill controller
@@ -109,4 +110,62 @@ class BillController extends Controller
             ], 422);
         }
     }
+    public function export()
+    {
+        $search = request()->query('search');
+        $status = request()->query('status');
+
+        $bills = Bill::with([
+            'visit:id,appointment_id',
+            'visit.appointment:id,case_id,doctor_name',
+            'visit.appointment.case:id,patient_id',
+            'visit.appointment.case.patient:id,first_name,middle_name,last_name',
+        ])
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('bill_number', 'like', "%$search%")
+                        ->orWhereRelation('visit.appointment.case.patient', 'first_name', 'like', "%$search%")
+                        ->orWhereRelation('visit.appointment.case.patient', 'last_name', 'like', "%$search%")
+                        ->orWhereRelation('visit.appointment', 'doctor_name', 'like', "%$search%");
+                });
+            })
+            ->when($status, fn($q, $status) => $q->where('status', $status))
+            ->latest('created_at')
+            ->get();
+
+        $headers = [
+            'Bill Number',
+            'Patient Name',
+            'Doctor Name',
+            'Total Amount',
+            'Paid Amount',
+            'Outstanding',
+            'Status',
+            'Bill Date',
+            'Due Date'
+        ];
+
+        $rows = $bills->map(fn($b) => [
+            $b->bill_number,
+            $b->visit?->appointment?->case?->patient?->full_name ?? '—',
+            $b->visit?->appointment?->doctor_name ?? '—',
+            $b->bill_amount,
+            $b->paid_amount,
+            $b->outstanding_amount,
+            $b->status,
+            $b->bill_date ? substr($b->bill_date, 0, 10) : '—',
+            $b->due_date ? substr($b->due_date, 0, 10) : '—',
+        ]);
+
+        $csv = collect([$headers])
+            ->merge($rows)
+            ->map(fn($row) => implode(',', array_map(fn($val) => '"' . str_replace('"', '""', $val) . '"', $row)))
+            ->implode("\n");
+
+        return response("\xEF\xBB\xBF" . $csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename=bills_export.csv',
+        ]);
+    }
 }
+

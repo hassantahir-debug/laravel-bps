@@ -10,12 +10,14 @@ use App\Http\Controllers\API\VisitController;
 use App\Http\Controllers\API\PatientController;
 use App\Http\Controllers\API\InsuranceController;
 use App\Http\Middleware\LoggerMiddleware;
+use App\Models\Bill;
 use Illuminate\Support\Facades\Route;
 
 // Biller section
 Route::middleware(['role:Admin,Biller'])->group(function () {
     Route::apiResource('visits', VisitController::class)->middleware(LoggerMiddleware::class);
     Route::post('bills', [BillController::class, 'store']);
+    Route::get('bills/export', [BillController::class, 'export']);
     Route::put('bills/{bill}', [BillController::class, 'update']);
 });
 
@@ -32,11 +34,13 @@ Route::delete('bills/{bill}', [BillController::class, 'destroy'])->middleware('r
 // Poster section
 Route::middleware(['role:Admin,Payment Poster'])->group(function () {
     Route::get('payments/export', [PaymentController::class, 'export']);
+
     Route::apiResource('payments', PaymentController::class);
     Route::get('/dashboard/poster', [DashboardController::class, 'posterStats']);
 });
 
 // Biller stats
+
 Route::get('/dashboard/biller', [DashboardController::class, 'billerStats'])->middleware('role:Admin,Biller');
 
 // Admin only
